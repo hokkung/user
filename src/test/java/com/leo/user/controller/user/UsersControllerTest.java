@@ -1,5 +1,6 @@
 package com.leo.user.controller.user;
 
+import com.leo.user.common.Name;
 import com.leo.user.entity.user.User;
 import com.leo.user.model.user.UserDTO;
 import com.leo.user.service.user.UserService;
@@ -40,7 +41,11 @@ class UsersControllerTest {
         users.add(u);
 
         List<UserDTO> expect = new ArrayList<>();
-        expect.add(new UserDTO(1, "f", "l", "e"));
+        Name name = new Name();
+        name.setFirstName("f");
+        name.setLastName("l");
+
+        expect.add(new UserDTO(1, name, "e"));
 
         when(mockUserservice.getUsers()).thenReturn(users);
 

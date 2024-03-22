@@ -1,15 +1,18 @@
 package com.leo.user.entity.user;
 
 import jakarta.persistence.*;
-import lombok.Generated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+import java.io.Serializable;
+
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+@Getter
+@Setter
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -18,8 +21,8 @@ public class User {
     private String email;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname")
-    private String lastname;
+    private String lastName;
 }
