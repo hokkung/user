@@ -1,17 +1,16 @@
 package com.leo.user.model.user;
 
 
+import com.leo.user.common.Name;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@Setter
-@Getter
+@NoArgsConstructor
+@Data
 public class UserDTO {
     private long id;
-    private String firstname;
-    private String lastname;
+    private Name name;
     private String email;
 }
