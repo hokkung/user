@@ -1,6 +1,6 @@
 package com.leo.user.service.user;
 
-import com.leo.user.entity.user.User;
+import com.leo.user.domain.user.User;
 
 import java.util.List;
 
