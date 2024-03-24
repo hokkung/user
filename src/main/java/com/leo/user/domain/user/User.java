@@ -1,4 +1,4 @@
-package com.leo.user.entity.user;
+package com.leo.user.domain.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;

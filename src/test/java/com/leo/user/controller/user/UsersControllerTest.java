@@ -1,7 +1,7 @@
 package com.leo.user.controller.user;
 
 import com.leo.user.common.Name;
-import com.leo.user.entity.user.User;
+import com.leo.user.domain.user.User;
 import com.leo.user.model.user.UserDTO;
 import com.leo.user.service.user.UserService;
 import com.leo.user.testutil.user.UserUtils;

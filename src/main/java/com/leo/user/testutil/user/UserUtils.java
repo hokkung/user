@@ -1,6 +1,6 @@
 package com.leo.user.testutil.user;
 
-import com.leo.user.entity.user.User;
+import com.leo.user.domain.user.User;
 import lombok.experimental.UtilityClass;
 
 
@@ -12,10 +12,10 @@ public final class UserUtils {
                                   String email,
                                   long id) {
         User user = new User();
-//        user.setId(id);
-//        user.setFirstName(firstName);
-//        user.setLastName(lastName);
-//        user.setEmail(email);
+        user.setId(id);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
 
         return user;
     }
