@@ -1,5 +1,6 @@
 package com.leo.user.service.user;
 
+import com.leo.user.controller.user.UserFilter;
 import com.leo.user.domain.user.User;
 import com.leo.user.repository.user.UserRepository;
 import lombok.Setter;
@@ -22,5 +23,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> getUsers(UserFilter filter) {
+        return userRepository.findByFirstName(filter.getFirstName());
     }
 }

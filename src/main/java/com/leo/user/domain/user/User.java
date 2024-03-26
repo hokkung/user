@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Entity
+@Table(name = "users", indexes = @Index(
+        columnList = "firstname", name = "firstname_idx"
+))
 public class User extends BaseEntity<Long> {
 
     @NotNull

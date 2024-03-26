@@ -26,4 +26,12 @@ public class UsersController {
 
         return users.stream().map(UserMapper.INSTANCE::toUserDTO).collect(Collectors.toList());
     }
+
+    @GetMapping("/first")
+    public List<UserDTO> getUsersByFirstName(UserQuery query) {
+        List<User> users = userService.getUsers(query.createFilter());
+
+        return users.stream().map(UserMapper.INSTANCE::toUserDTO).collect(Collectors.toList());
+    }
+
 }
