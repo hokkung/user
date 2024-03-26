@@ -11,9 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users", indexes = @Index(
-        columnList = "firstname", name = "firstname_idx"
-))
+@Table(
+        name = "users",
+        indexes = {
+                @Index(columnList = "firstname", name = "firstname_idx"),
+                @Index(columnList = "firstname,lastname", name = "first_and_last_idx")
+})
 public class User extends BaseEntity<Long> {
 
     @NotNull

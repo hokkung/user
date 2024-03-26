@@ -1,6 +1,6 @@
 package com.leo.user.model.user;
 
-import com.leo.user.common.Name;
+import com.leo.user.common.domain.Name;
 import com.leo.user.domain.user.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
