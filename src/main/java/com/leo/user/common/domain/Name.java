@@ -1,4 +1,4 @@
-package com.leo.user.common;
+package com.leo.user.common.domain;
 
 
 import jakarta.validation.constraints.NotNull;
