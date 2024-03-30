@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -34,4 +36,12 @@ public class User extends BaseEntity<Long> {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    public static User create() {
+        User user = new User();
+        user.setCreatedDate(new Date());
+        user.setUpdatedDate(new Date());
+
+        return user;
+    }
 }

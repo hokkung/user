@@ -1,7 +1,9 @@
 package com.leo.user.controller.user;
 
 import com.leo.user.common.domain.Name;
+import com.leo.user.domain.user.Gender;
 import com.leo.user.domain.user.User;
+import com.leo.user.model.audit.AuditDto;
 import com.leo.user.model.user.UserDTO;
 import com.leo.user.service.user.UserService;
 import com.leo.user.testutil.user.UserUtils;
@@ -45,7 +47,7 @@ class UsersControllerTest {
         name.setFirstName("f");
         name.setLastName("l");
 
-        expect.add(new UserDTO(1, name, "e"));
+        expect.add(new UserDTO(1, name, "e", Gender.MALE, new AuditDto()));
 
         when(mockUserservice.getUsers()).thenReturn(users);
 
