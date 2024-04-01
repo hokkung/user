@@ -5,7 +5,7 @@ import com.leo.user.domain.user.User;
 import com.leo.user.mapper.user.UserMapper;
 import com.leo.user.model.user.CreateOrUpdateUserForm;
 import com.leo.user.model.user.UserDTO;
-import com.leo.user.service.user.UserCrudServiceImpl;
+import com.leo.user.service.user.UserCrudService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +14,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@Setter
 public class UserController {
 
     @Autowired
-    @Setter
-    private UserCrudServiceImpl userCrudService;
+    private UserCrudService userCrudService;
 
     @GetMapping("/{id}")
     public UserDTO get(@PathVariable long id) {

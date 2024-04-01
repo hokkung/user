@@ -37,7 +37,7 @@ class UsersControllerTest {
 
     @Test
     void getUsers() {
-        User u = UserUtils.createUser("f", "l", "e", 1);
+        User u = UserUtils.create("f", "l", "e", 1);
 
         List<User> users = new ArrayList<>();
         users.add(u);
@@ -47,7 +47,7 @@ class UsersControllerTest {
         name.setFirstName("f");
         name.setLastName("l");
 
-        expect.add(new UserDTO(1, name, "e", Gender.MALE, new AuditDto()));
+        expect.add(UserDTO.create(1, name, "e", Gender.MALE, new AuditDto()));
 
         when(mockUserservice.getUsers()).thenReturn(users);
 

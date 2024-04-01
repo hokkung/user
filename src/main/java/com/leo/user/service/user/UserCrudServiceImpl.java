@@ -13,30 +13,27 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Setter
 public class UserCrudServiceImpl implements UserCrudService {
 
     @Autowired
-    @Setter
     private UserRepository userRepository;
 
     @Override
     public User create(CreateOrUpdateUserForm form) {
-        User user = new User();
+        User user = User.create();
         user.setEmail(form.getEmail());
 
         Name name = form.getName();
         user.setFirstName(name.getFirstName());
         user.setLastName(name.getLastName());
 
-        userRepository.save(user);
-
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public User update(User user) {
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
@@ -54,7 +51,7 @@ public class UserCrudServiceImpl implements UserCrudService {
 
     @Override
     public Optional<User> get(long id) {
-        return  userRepository.findById(id);
+        return userRepository.findById(id);
     }
 
     @Override

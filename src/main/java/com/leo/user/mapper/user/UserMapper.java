@@ -2,13 +2,12 @@ package com.leo.user.mapper.user;
 
 
 import com.leo.user.domain.user.User;
-import com.leo.user.mapper.audit.AuditMapper;
 import com.leo.user.model.user.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {AuditMapper.class})
+@Mapper(uses = {UserRoleMapper.class})
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);

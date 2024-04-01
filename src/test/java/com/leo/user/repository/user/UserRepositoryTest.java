@@ -23,11 +23,11 @@ class UserRepositoryTest {
 
     @Test
     void testCreate() {
-        User user = UserUtils.createUser("f", "l", "f@gmail.com");
+        User user = UserUtils.create("f", "l", "f@gmail.com", "pass");
 
-        User savedUser = underTest.save(user);
-        User existUser = entityManager.find(User.class, savedUser.getId());
+        User savedUserImpl = underTest.save(user);
+        User existUserImpl = entityManager.find(User.class, savedUserImpl.getId());
 
-        Assertions.assertEquals(savedUser.getId(), existUser.getId());
+        Assertions.assertEquals(savedUserImpl.getId(), existUserImpl.getId());
     }
 }
