@@ -9,7 +9,7 @@ public interface UserCrudService {
 
     User create(CreateOrUpdateUserForm form);
 
-    User update(User user);
+    User update(User userImpl);
 
     User update(long id, CreateOrUpdateUserForm form);
 

@@ -34,7 +34,7 @@ class UserControllerTest {
     void testGet() {
         long id = 1;
 
-        User user = UserUtils.createUser("f", "l", "h@gmail.com", id);
+        User user = UserUtils.create("f", "l", "h@gmail.com", id);
         UserDTO expect = UserMapper.INSTANCE.toUserDTO(user);
 
         when(mockUserCrudService.get(id)).thenReturn(Optional.of(user));

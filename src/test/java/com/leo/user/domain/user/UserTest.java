@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
-
     private User underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new User();
+        underTest = User.create();
     }
 
     @Test
@@ -22,4 +21,6 @@ class UserTest {
 
         assertEquals(1L, underTest.getId());
     }
+
+
 }

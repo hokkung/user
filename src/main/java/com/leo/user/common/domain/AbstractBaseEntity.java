@@ -10,10 +10,10 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class BaseEntity<K> extends Auditable implements Serializable {
+@Setter
+@Getter
+public abstract class AbstractBaseEntity<K> implements Serializable {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private K id;

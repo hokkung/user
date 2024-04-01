@@ -15,17 +15,15 @@ import java.util.Date;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public abstract class Auditable {
+@Setter
+@Getter
+public abstract class AbstractAuditableEntity<K> extends AbstractBaseEntity<K> {
 
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreatedDate
-    @Setter
-    @Getter
     private Date createdDate;
 
     @Column(name = "updated_date", nullable = false)
     @LastModifiedDate
-    @Setter
-    @Getter
     private Date updatedDate;
 }
