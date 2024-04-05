@@ -4,7 +4,7 @@ import com.leo.user.common.domain.Name;
 import com.leo.user.domain.user.Gender;
 import com.leo.user.domain.user.User;
 import com.leo.user.model.audit.AuditDto;
-import com.leo.user.model.user.UserDTO;
+import com.leo.user.model.user.UserDto;
 import com.leo.user.service.user.UserService;
 import com.leo.user.testutil.user.UserUtils;
 import org.junit.jupiter.api.Assertions;
@@ -42,16 +42,16 @@ class UsersControllerTest {
         List<User> users = new ArrayList<>();
         users.add(u);
 
-        List<UserDTO> expect = new ArrayList<>();
+        List<UserDto> expect = new ArrayList<>();
         Name name = new Name();
         name.setFirstName("f");
         name.setLastName("l");
 
-        expect.add(UserDTO.create(1, name, "e", Gender.MALE, new AuditDto()));
+        expect.add(UserDto.create(1, name, "e", Gender.MALE, new AuditDto()));
 
         when(mockUserservice.getUsers()).thenReturn(users);
 
-        List<UserDTO> actual = underTest.getUsers();
+        List<UserDto> actual = underTest.getUsers();
 
         Assertions.assertEquals(actual.size(), 1);
     }

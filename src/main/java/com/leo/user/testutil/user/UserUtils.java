@@ -31,8 +31,8 @@ public final class UserUtils {
                        String lastName,
                        String email) {
         User user = User.create();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
+        user.getName().setFirstName(firstName);
+        user.getName().setLastName(lastName);
         user.setEmail(email);
 
         return user;

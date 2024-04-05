@@ -5,6 +5,9 @@ import com.leo.user.domain.user.User;
 import com.leo.user.repository.user.UserRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +15,10 @@ import java.util.List;
 
 @Setter
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserCrudService userCrudService;
 
     @Override
     public List<User> getUsers() {
@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers(UserFilter filter) {
-        return userRepository.findByFirstName(filter.getFirstName());
+        return userRepository.findByNameFirstName(filter.getFirstName());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return  userRepository.findByEmail(username).orElseThrow();
     }
 }
