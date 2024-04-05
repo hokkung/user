@@ -1,11 +1,25 @@
 package com.leo.user.domain.user;
 
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Getter
 public enum Role {
-    ADMIN,
-    USER;
-    private String name;
+    UNSPECIFIED(0),
+    ADMIN(1),
+    USER(2);
+
+    private final long value;
+
+    public static Role create(long value) {
+        for (Role role : Role.values()) {
+            if (role.value == value) {
+                return role;
+            }
+        }
+
+        throw new IllegalArgumentException("invalid role value");
+    }
 }

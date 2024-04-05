@@ -4,7 +4,7 @@ import com.leo.user.common.exception.EntityNotFoundException;
 import com.leo.user.domain.user.User;
 import com.leo.user.mapper.user.UserMapper;
 import com.leo.user.model.user.CreateOrUpdateUserForm;
-import com.leo.user.model.user.UserDTO;
+import com.leo.user.model.user.UserDto;
 import com.leo.user.service.user.UserCrudService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserController {
     private UserCrudService userCrudService;
 
     @GetMapping("/{id}")
-    public UserDTO get(@PathVariable long id) {
+    public UserDto get(@PathVariable long id) {
         Optional<User> optionalUser = userCrudService.get(id);
         if (optionalUser.isEmpty()) {
             throw new EntityNotFoundException();
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDTO create(@RequestBody CreateOrUpdateUserForm form) {
+    public UserDto create(@RequestBody CreateOrUpdateUserForm form) {
         User user = userCrudService.create(form);
         return UserMapper.INSTANCE.toUserDTO(user);
     }
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDTO update(@PathVariable long id, @RequestBody CreateOrUpdateUserForm form) {
+    public UserDto update(@PathVariable long id, @RequestBody CreateOrUpdateUserForm form) {
         User user = userCrudService.update(id, form);
         return UserMapper.INSTANCE.toUserDTO(user);
     }

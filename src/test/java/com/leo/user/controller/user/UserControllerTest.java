@@ -3,7 +3,7 @@ package com.leo.user.controller.user;
 import com.leo.user.common.exception.EntityNotFoundException;
 import com.leo.user.domain.user.User;
 import com.leo.user.mapper.user.UserMapper;
-import com.leo.user.model.user.UserDTO;
+import com.leo.user.model.user.UserDto;
 import com.leo.user.service.user.UserCrudServiceImpl;
 import com.leo.user.testutil.user.UserUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +35,11 @@ class UserControllerTest {
         long id = 1;
 
         User user = UserUtils.create("f", "l", "h@gmail.com", id);
-        UserDTO expect = UserMapper.INSTANCE.toUserDTO(user);
+        UserDto expect = UserMapper.INSTANCE.toUserDTO(user);
 
         when(mockUserCrudService.get(id)).thenReturn(Optional.of(user));
 
-        UserDTO actual = underTest.get(id);
+        UserDto actual = underTest.get(id);
 
         assertEquals(expect.getId(), actual.getId());
         assertEquals(expect.getName(), actual.getName());

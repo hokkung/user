@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserDTO {
+public class UserDto {
     private long id;
     private Name name;
     private String email;
@@ -23,7 +23,7 @@ public class UserDTO {
     private AuditDto auditDto;
     private Set<String> roles;
 
-    public static UserDTO create(int id, Name name, String email, Gender gender, AuditDto auditDto) {
-      return UserDTO.builder().id(id).name(name).email(email).gender(gender).auditDto(auditDto).build();
+    public static UserDto create(int id, Name name, String email, Gender gender, AuditDto auditDto) {
+      return UserDto.builder().id(id).name(name).email(email).gender(gender).auditDto(auditDto).build();
     }
 }
