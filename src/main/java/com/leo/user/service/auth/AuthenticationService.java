@@ -1,10 +1,10 @@
 package com.leo.user.service.auth;
 
-import com.leo.user.domain.user.User;
+import com.leo.user.model.auth.AuthenticationResult;
 import com.leo.user.model.auth.RegisterRequest;
 
 public interface AuthenticationService {
-    User register(RegisterRequest registerRequest);
+    AuthenticationResult register(RegisterRequest registerRequest);
 
-    String login(RegisterRequest request);
+    AuthenticationResult login(RegisterRequest request);
 }

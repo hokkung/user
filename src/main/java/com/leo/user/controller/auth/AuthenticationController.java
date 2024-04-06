@@ -1,9 +1,8 @@
 package com.leo.user.controller.auth;
 
 
-import com.leo.user.domain.user.User;
 import com.leo.user.mapper.user.UserMapper;
-import com.leo.user.model.auth.AuthenticationResponseDto;
+import com.leo.user.model.auth.AuthenticationResult;
 import com.leo.user.model.auth.LoginResponseDto;
 import com.leo.user.model.auth.RegisterRequest;
 import com.leo.user.service.auth.AuthenticationService;
@@ -23,16 +22,22 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public AuthenticationResponseDto register(@RequestBody RegisterRequest request) {
-        User user =  authenticationService.register(request);
+    public LoginResponseDto register(@RequestBody RegisterRequest request) {
+        AuthenticationResult res = authenticationService.register(request);
 
-        return AuthenticationResponseDto.builder().user(UserMapper.INSTANCE.toUserDTO(user)).build();
+        return new LoginResponseDto(
+                UserMapper.INSTANCE.toUserDTO(res.user()),
+                res.token(),
+                res.tokenExpirationTime());
     }
 
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody RegisterRequest request) {
-        String token =  authenticationService.login(request);
+        AuthenticationResult res = authenticationService.login(request);
 
-        return LoginResponseDto.builder().token(token).build();
+        return new LoginResponseDto(
+                UserMapper.INSTANCE.toUserDTO(res.user()),
+                res.token(),
+                res.tokenExpirationTime());
     }
 }

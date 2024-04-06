@@ -1,10 +1,11 @@
 package com.leo.user.model.auth;
 
-import lombok.Builder;
-import lombok.Data;
+import com.leo.user.model.user.UserDto;
 
-@Data
-@Builder
-public class LoginResponseDto {
-    private String token;
-}
+import java.util.Date;
+
+public record LoginResponseDto(
+        UserDto user,
+        String token,
+        Date tokenExpiredTime
+) {}
