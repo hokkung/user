@@ -8,13 +8,15 @@ import java.util.Date;
 
 @UtilityClass
 public class ClockUtils {
-    private static final Clock SYSTEM_CLOCK = Clock.systemUTC();
+    private static Clock systemClock = Clock.systemUTC();
+    private static Clock defaultClock = Clock.systemUTC();
+
     public static Instant getCurrent() {
-        return Instant.now(SYSTEM_CLOCK);
+        return Instant.now(systemClock);
     }
 
     public static Date current() {
-        return Date.from(Instant.now(SYSTEM_CLOCK));
+        return Date.from(Instant.now(systemClock));
     }
 
     public static boolean isBefore(Instant instant) {
@@ -27,5 +29,13 @@ public class ClockUtils {
 
     public static boolean isNow(Instant instant) {
         return instant.equals(getCurrent());
+    }
+
+    public static void setClock(Clock clock) {
+        systemClock = clock;
+    }
+
+    public static void resetClock() {
+        systemClock = defaultClock;
     }
 }
