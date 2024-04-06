@@ -71,7 +71,9 @@ public class SecurityConfig {
                     auth.requestMatchers("api/v1/auth/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .oauth2ResourceServer(configure -> configure.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(configure -> {
+                    configure.jwt(Customizer.withDefaults());
+                })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
