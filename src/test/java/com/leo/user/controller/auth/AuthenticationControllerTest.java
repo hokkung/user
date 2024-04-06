@@ -1,17 +1,24 @@
 package com.leo.user.controller.auth;
 
 import com.leo.user.common.domain.Name;
+import com.leo.user.common.util.ClockUtils;
 import com.leo.user.domain.user.Gender;
 import com.leo.user.domain.user.User;
 import com.leo.user.mapper.user.UserMapper;
-import com.leo.user.model.auth.AuthenticationResponseDto;
+import com.leo.user.model.auth.AuthenticationResult;
+import com.leo.user.model.auth.LoginResponseDto;
 import com.leo.user.model.auth.RegisterRequest;
 import com.leo.user.model.user.UserDto;
 import com.leo.user.service.auth.AuthenticationService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +37,8 @@ class AuthenticationControllerTest {
 
     @Test
     void testRegister() {
+        Clock.fixed(Instant.now(), ZoneId.systemDefault());
+
         RegisterRequest r = RegisterRequest.create(
                 "leo",
                 "1234",
@@ -42,18 +51,20 @@ class AuthenticationControllerTest {
         user.setEmail(r.getEmail());
         user.setPassword(r.getPassword());
 
-        UserDto expect = UserMapper.INSTANCE.toUserDTO(user);
+        UserDto userDto = UserMapper.INSTANCE.toUserDTO(user);
 
-        when(authenticationService.register(r)).thenReturn(user);
+        AuthenticationResult expect = new AuthenticationResult(
+                user,
+                "jwt",
+                Date.from(ClockUtils.getCurrent())
+        );
 
-        AuthenticationResponseDto result = underTest.register(r);
+        when(authenticationService.register(r)).thenReturn(expect);
 
-        Assertions.assertEquals(expect.getName().getFirstName(), result.getUser().getName().getFirstName());
-        Assertions.assertEquals(expect.getName().getLastName(), result.getUser().getName().getLastName());
-        Assertions.assertEquals(expect.getEmail(), result.getUser().getEmail());
-        Assertions.assertEquals(expect.getId(), result.getUser().getId());
-        Assertions.assertEquals(expect.getGender(), result.getUser().getGender());
+        LoginResponseDto result = underTest.register(r);
+
+        assertEquals(expect.token(), result.token());
+        assertEquals(expect.tokenExpirationTime(), result.tokenExpiredTime());
+        assertEquals(userDto.getEmail(), result.user().getEmail());
     }
-
-
 }

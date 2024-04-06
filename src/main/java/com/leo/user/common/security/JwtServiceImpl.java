@@ -1,47 +1,65 @@
 package com.leo.user.common.security;
 
+import com.leo.user.common.util.ClockUtils;
+import com.leo.user.config.JwtProperties;
+import com.leo.user.domain.user.User;
+import com.leo.user.model.auth.JwtToken;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Service
+@Setter
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${jwt.expiration-time-in-minute:60}")
-    private long jwtExpirationTimeInMinute;
+    @Autowired
+    private JwtProperties jwtProperties;
 
     @Autowired
-    @Setter
     private JwtDecoder jwtDecoder;
 
     @Autowired
-    @Setter
     private JwtEncoder jwtEncoder;
 
     @Override
-    public String generateToken(Authentication auth) {
-        String scope = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+    public JwtToken generateToken(String name) {
+        return generateToken(name, Set.of());
+    }
+
+    @Override
+    public JwtToken generateToken(User user) {
+        return generateToken(user.getEmail(), user.getRoles().stream().map(Enum::name).collect(Collectors.toSet()));
+    }
+
+    private JwtToken generateToken(String name, Set<String> roles) {
+        Instant current = ClockUtils.getCurrent();
+        Instant expirationTime = getExpirationTime(current);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuedAt(new Date().toInstant())
-                .subject(auth.getName())
-                .claim("roles", scope)
+                .issuedAt(current)
+                .expiresAt(expirationTime)
+                .subject(name)
+                .claim("roles",  String.join(" ", roles))
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return new JwtToken(
+                jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(),
+                new Date(expirationTime.toEpochMilli())
+        );
+    }
+
+    private Instant getExpirationTime(Instant current) {
+        return current.plusMillis(jwtProperties.expirationTimeInMinute() * 60 * 1000);
     }
 
 //
