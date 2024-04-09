@@ -7,5 +7,6 @@ import java.util.Date;
 public record LoginResponseDto(
         UserDto user,
         String token,
+        String refreshToken,
         Date tokenExpiredTime
 ) {}

@@ -1,7 +1,8 @@
 package com.leo.user.common.security;
 
 import com.leo.user.domain.user.User;
-import com.leo.user.model.auth.JwtToken;
+import org.springframework.security.oauth2.jwt.Jwt;
+
 
 public interface JwtService {
 
@@ -9,7 +10,7 @@ public interface JwtService {
 //
 //    boolean IsTokenValid(String token, UserDetails userDetails);
 
-    JwtToken generateToken(String name);
-
     JwtToken generateToken(User user);
+
+    JwtToken generateToken(User user, Jwt token);
 }
