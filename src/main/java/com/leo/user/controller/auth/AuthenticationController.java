@@ -5,9 +5,11 @@ import com.leo.user.mapper.user.UserMapper;
 import com.leo.user.model.auth.AuthenticationResult;
 import com.leo.user.model.auth.LoginResponseDto;
 import com.leo.user.model.auth.RegisterRequest;
+import com.leo.user.model.auth.TokenDto;
 import com.leo.user.service.auth.AuthenticationService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ public class AuthenticationController {
         return new LoginResponseDto(
                 UserMapper.INSTANCE.toUserDTO(res.user()),
                 res.token(),
+                res.refreshToken(),
                 res.tokenExpirationTime());
     }
 
@@ -38,6 +41,13 @@ public class AuthenticationController {
         return new LoginResponseDto(
                 UserMapper.INSTANCE.toUserDTO(res.user()),
                 res.token(),
+                res.refreshToken(),
                 res.tokenExpirationTime());
+    }
+
+    @PostMapping("/refresh-token")
+    public TokenDto refreshToken(JwtAuthenticationToken token) {
+        AuthenticationResult res = authenticationService.refreshToken(token);
+        return new TokenDto(res.token(), res.refreshToken(), res.tokenExpirationTime());
     }
 }

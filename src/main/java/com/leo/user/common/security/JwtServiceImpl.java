@@ -3,13 +3,9 @@ package com.leo.user.common.security;
 import com.leo.user.common.util.ClockUtils;
 import com.leo.user.config.JwtProperties;
 import com.leo.user.domain.user.User;
-import com.leo.user.model.auth.JwtToken;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -32,16 +28,20 @@ public class JwtServiceImpl implements JwtService {
     private JwtEncoder jwtEncoder;
 
     @Override
-    public JwtToken generateToken(String name) {
-        return generateToken(name, Set.of());
+    public JwtToken generateToken(User user) {
+        return generateToken(user.getEmail(),
+                user.getRoles().stream().map(Enum::name).collect(Collectors.toSet()),
+                null);
     }
 
     @Override
-    public JwtToken generateToken(User user) {
-        return generateToken(user.getEmail(), user.getRoles().stream().map(Enum::name).collect(Collectors.toSet()));
+    public JwtToken generateToken(User user, Jwt refreshToken) {
+        return generateToken(user.getEmail(),
+                user.getRoles().stream().map(Enum::name).collect(Collectors.toSet()),
+                refreshToken);
     }
 
-    private JwtToken generateToken(String name, Set<String> roles) {
+    private JwtToken generateToken(String name, Set<String> roles, Jwt refreshToken) {
         Instant current = ClockUtils.getCurrent();
         Instant expirationTime = getExpirationTime(current);
 
@@ -52,14 +52,35 @@ public class JwtServiceImpl implements JwtService {
                 .claim("roles",  String.join(" ", roles))
                 .build();
 
+        if (refreshToken != null) {
+            return new JwtToken(
+                    jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(),
+                    refreshToken.getTokenValue(),
+                    new Date(expirationTime.toEpochMilli())
+            );
+        }
+
+        Instant refreshExpirationTime = getRefreshExpirationTime(current);
+        JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
+                .issuedAt(current)
+                .expiresAt(refreshExpirationTime)
+                .subject(name)
+                .claim("roles",  String.join(" ", roles))
+                .build();
+
         return new JwtToken(
                 jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(),
+                jwtEncoder.encode(JwtEncoderParameters.from(refreshClaims)).getTokenValue(),
                 new Date(expirationTime.toEpochMilli())
         );
     }
 
     private Instant getExpirationTime(Instant current) {
         return current.plusMillis(jwtProperties.expirationTimeInMinute() * 60 * 1000);
+    }
+
+    private Instant getRefreshExpirationTime(Instant current) {
+        return current.plusMillis(jwtProperties.refreshExpirationTimeInMinute() * 60 * 1000);
     }
 
 //

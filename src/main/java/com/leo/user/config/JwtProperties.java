@@ -4,9 +4,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "jwt")
 public record JwtProperties(
-        long expirationTimeInMinute
+        long expirationTimeInMinute,
+        long refreshExpirationTimeInMinute
 ) {
     public JwtProperties() {
-        this(1);
+        this(1, 30);
     }
 }

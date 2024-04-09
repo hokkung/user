@@ -3,10 +3,10 @@ package com.leo.user.service.auth;
 
 import com.leo.user.common.exception.EntityNotFoundException;
 import com.leo.user.common.security.JwtService;
+import com.leo.user.common.security.JwtToken;
 import com.leo.user.domain.user.Gender;
 import com.leo.user.domain.user.User;
 import com.leo.user.model.auth.AuthenticationResult;
-import com.leo.user.model.auth.JwtToken;
 import com.leo.user.model.auth.RegisterRequest;
 import com.leo.user.model.user.CreateOrUpdateUserForm;
 import com.leo.user.repository.user.UserRepository;
@@ -15,6 +15,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -62,11 +64,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return generateToken(optionalUser.get());
     }
 
+    @Override
+    public AuthenticationResult refreshToken(JwtAuthenticationToken token) {
+        Optional<User> optionalUser = userRepository.findByEmail(token.getName());
+        if (optionalUser.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        return generateToken(optionalUser.get(), token.getToken());
+    }
+
+    private AuthenticationResult generateToken(User user, Jwt token) {
+        JwtToken jwtToken = jwtService.generateToken(user, token);
+        return new AuthenticationResult(
+                user,
+                jwtToken.token(),
+                jwtToken.refreshToken(),
+                jwtToken.tokenExpirationTime()
+        );
+    }
+
     private AuthenticationResult generateToken(User user) {
         JwtToken jwtToken = jwtService.generateToken(user);
         return new AuthenticationResult(
                 user,
                 jwtToken.token(),
+                jwtToken.refreshToken(),
                 jwtToken.tokenExpirationTime()
         );
     }

@@ -7,6 +7,6 @@ import java.util.Date;
 public record AuthenticationResult(
         User user,
         String token,
+        String refreshToken,
         Date tokenExpirationTime
-){
-}
+) {}
