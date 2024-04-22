@@ -7,7 +7,7 @@ public record JwtProperties(
         long expirationTimeInMinute,
         long refreshExpirationTimeInMinute
 ) {
-    public JwtProperties() {
-        this(1, 30);
-    }
+//    public JwtProperties() {
+//        this(1, 30);
+//    }
 }

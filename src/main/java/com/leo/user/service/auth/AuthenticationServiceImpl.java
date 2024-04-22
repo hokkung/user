@@ -1,7 +1,6 @@
 package com.leo.user.service.auth;
 
 
-import com.leo.user.common.exception.EntityNotFoundException;
 import com.leo.user.common.security.JwtService;
 import com.leo.user.common.security.JwtToken;
 import com.leo.user.domain.user.Gender;
@@ -10,6 +9,7 @@ import com.leo.user.model.auth.AuthenticationResult;
 import com.leo.user.model.auth.RegisterRequest;
 import com.leo.user.model.user.CreateOrUpdateUserForm;
 import com.leo.user.repository.user.UserRepository;
+import com.leo.user.service.token.TokenService;
 import com.leo.user.service.user.UserCrudService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @Setter
@@ -37,7 +37,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private UserCrudService userCrudService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Override
+    @Transactional
     public AuthenticationResult register(RegisterRequest request) {
         CreateOrUpdateUserForm form = CreateOrUpdateUserForm
                 .builder()
@@ -47,31 +54,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .gender(Gender.valueOf(request.getGender()))
                 .build();
         User user = userCrudService.create(form);
-        return generateToken(user);
+        AuthenticationResult res = generateToken(user);
+
+        tokenService.create(res);
+
+        return res;
     }
 
     @Override
+    @Transactional
     public AuthenticationResult login(RegisterRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
-        if (optionalUser.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        return generateToken(optionalUser.get());
+        tokenService.revokeAllToken(user);
+
+        AuthenticationResult res = generateToken(user);
+
+        tokenService.create(res);
+
+        return res;
     }
 
     @Override
     public AuthenticationResult refreshToken(JwtAuthenticationToken token) {
-        Optional<User> optionalUser = userRepository.findByEmail(token.getName());
-        if (optionalUser.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
+        User user = userRepository.findByEmail(token.getName()).orElseThrow();
 
-        return generateToken(optionalUser.get(), token.getToken());
+        tokenService.revokeAllToken(user);
+
+        AuthenticationResult res = generateToken(user, token.getToken());
+
+        tokenService.create(res);
+
+        return res;
     }
 
     private AuthenticationResult generateToken(User user, Jwt token) {

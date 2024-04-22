@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class AuthenticationControllerTest {
-    private AuthenticationController underTest;
+class AuthControllerTest {
+    private AuthController underTest;
 
     private AuthenticationService authenticationService;
 
@@ -31,7 +31,7 @@ class AuthenticationControllerTest {
     void setUp() {
         authenticationService = mock(AuthenticationService.class);
 
-        underTest = new AuthenticationController();
+        underTest = new AuthController();
         underTest.setAuthenticationService(authenticationService);
     }
 
@@ -56,6 +56,7 @@ class AuthenticationControllerTest {
         AuthenticationResult expect = new AuthenticationResult(
                 user,
                 "jwt",
+                "refreshJwt",
                 Date.from(ClockUtils.getCurrent())
         );
 

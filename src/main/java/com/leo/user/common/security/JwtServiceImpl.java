@@ -82,42 +82,4 @@ public class JwtServiceImpl implements JwtService {
     private Instant getRefreshExpirationTime(Instant current) {
         return current.plusMillis(jwtProperties.refreshExpirationTimeInMinute() * 60 * 1000);
     }
-
-//
-//    @Override
-//    public String extractUsername(String token) {
-//        return extractClaim(token, Claims::getSubject);
-//    }
-//
-//    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-//        final Claims claims = extractAllCliams(token);
-//        return claimsResolver.apply(claims);
-//    }
-//
-//    private Claims extractAllCliams(String token) {
-//        return Jwts.parser()
-//                .verifyWith(getSignInKey())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getPayload();
-//    }
-//
-//    private SecretKey getSignInKey() {
-//        byte[] bytes = Decoders.BASE64.decode(jwtSecretKey);
-//        return Keys.hmacShaKeyFor(bytes);}
-//
-//    @Override
-//    public boolean IsTokenValid(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-//    }
-//
-//    private boolean isTokenExpired(String token) {
-//        return extractExpiration(token).before(new Date());
-//    }
-//
-//    private Date extractExpiration(String token) {
-//        return extractClaim(token, Claims::getExpiration);
-//    }
-
 }

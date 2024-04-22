@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name = "tokens")
 @Getter
 @Setter
-public class Token extends AbstractAuditableEntity<Long> {
+public class Token extends AbstractAuditableEntity<Long> implements TokenInf {
 
     @Column(name = "token")
     private String token;
@@ -44,5 +44,14 @@ public class Token extends AbstractAuditableEntity<Long> {
         Token token = new Token();
         token.setUser(user);
         return token;
+    }
+
+    public void deactivate() {
+        setExpired(true);
+        setRevoked(true);
+    }
+
+    public boolean isValid() {
+        return !this.isExpired() || !this.isRevoked();
     }
 }
